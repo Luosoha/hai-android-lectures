@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BMICalculator</string>
+    <string name="hello_android_6">Hello Android 6!</string>
+    <string name="calculate_BMI">Calculate BMI</string>
+    <string name="weight">Weight (kg)</string>
+    <string name="height">Height (cm)</string>
+</resources>
