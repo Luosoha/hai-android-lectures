@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="techkids.vn.activitylifecycle.MainActivity">
+
+    <TextView
+        android:id="@+id/tv_activity_A"
+        android:text="@string/activity_a"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_on_create"
+        android:text="@string/oncreate_0"
+        android:layout_below="@id/tv_activity_A"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_on_start"
+        android:text="@string/onstart_0"
+        android:layout_below="@id/tv_on_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_on_restart"
+        android:text="@string/onrestart_0"
+        android:layout_below="@id/tv_on_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_on_resume"
+        android:text="@string/onresume_0"
+        android:layout_below="@id/tv_on_restart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_on_pause"
+        android:text="@string/onpause_0"
+        android:layout_below="@id/tv_on_resume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_on_stop"
+        android:text="@string/onstop_0"
+        android:layout_below="@id/tv_on_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_on_destroy"
+        android:text="@string/ondestroy_0"
+        android:layout_below="@id/tv_on_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/bt_go_to_activity_B"
+        android:text="@string/go_to_activity_b"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_on_destroy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

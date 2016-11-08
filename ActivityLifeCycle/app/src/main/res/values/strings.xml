@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ActivityLifeCycle</string>
+    <string name="activity_a">Activity A</string>
+    <string name="oncreate_0">onCreate: 0</string>
+    <string name="onstart_0">onStart: 0</string>
+    <string name="onrestart_0">onRestart: 0</string>
+    <string name="onresume_0">onResume: 0</string>
+    <string name="onpause_0">onPause: 0</string>
+    <string name="onstop_0">onStop: 0</string>
+    <string name="ondestroy_0">onDestroy: 0</string>
+    <string name="go_to_activity_b">Go to Activity B</string>
+    <string name="activity_b">Activity B</string>
+</resources>
