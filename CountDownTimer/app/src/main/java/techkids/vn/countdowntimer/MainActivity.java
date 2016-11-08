@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         getReferences();
         addListeners();
-
-
     }
 
     private void getReferences() {
@@ -106,5 +104,17 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("minutes", min);
         outState.putInt("seconds", sec);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        startTimer();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        cancelTimer();
     }
 }
