@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Lab3</string>
+    <string name="night_dress">Night dress</string>
+    <string name="avaiable_in_many_colors">avaiable in many colors</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="colors">Colors</string>
+    <string name="sizes">Sizes</string>
+    <string name="avaiable_within_2_4_business_days_express_delivery_avaiable">Avaiable within 2-4 business days Express - Delivery avaiable</string>
+    <string name="details">Details</string>
+    <string name="various_leather_applications_and_patches">- Various leather applications and patches.</string>
+    <string name="rib_knit_cuffs_and_hem">- Rib knit cuffs and hem.</string>
+    <string name="contains_non_textile_parts_of_animal_origin">- Contains non-textile parts of animal origin.</string>
+    <string name="length_medium">- Length: medium.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="choose_color_size"><![CDATA[Choose color & size]]></string>
+</resources>
