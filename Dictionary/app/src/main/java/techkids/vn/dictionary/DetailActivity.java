@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvOriginalWord;
     private TextView tvTranslatedWord;
     private ImageView ivHeart;
+    private int favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String originalWord = intent.getStringExtra(ORIGINAL_WORD_KEY);
         String translatedWord = intent.getStringExtra(TRANSLATED_WORD_KEY);
-        int favorite = intent.getIntExtra(FAVORITE_WORD_KEY, -1);
+        favorite = intent.getIntExtra(FAVORITE_WORD_KEY, -1);
 
         tvOriginalWord.setText(originalWord);
         tvTranslatedWord.setText(translatedWord);
@@ -39,6 +41,8 @@ public class DetailActivity extends AppCompatActivity {
             ivHeart.setImageResource(R.drawable.not_favorite);
         }
 
+        addListeners();
+
         Log.d(TAG, originalWord + " - " + translatedWord);
     }
 
@@ -46,5 +50,21 @@ public class DetailActivity extends AppCompatActivity {
         tvOriginalWord = (TextView) findViewById(R.id.tv_original_word);
         tvTranslatedWord = (TextView) findViewById(R.id.tv_translated_word);
         ivHeart = (ImageView) findViewById(R.id.iv_heart);
+    }
+
+    private void addListeners() {
+        ivHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (favorite == 1) {
+                    ivHeart.setImageResource(R.drawable.not_favorite);
+                    favorite = 0;
+                }
+                else {
+                    ivHeart.setImageResource(R.drawable.favorite_heart);
+                    favorite = 1;
+                }
+            }
+        });
     }
 }
