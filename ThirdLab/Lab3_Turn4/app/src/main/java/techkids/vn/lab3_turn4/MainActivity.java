@@ -20,6 +20,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import techkids.vn.lab3_turn4.json.models.ApiResponse;
 import techkids.vn.lab3_turn4.json.models.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
 
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                Gson gson = new Gson();
+                final Gson gson = new Gson();
                 String data = gson.toJson(user);
                 final RequestBody requestBody = RequestBody.create(JSON, data);
 
@@ -105,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(Call call, Response response) throws IOException {
                         String body = response.body().string();
                         Log.d(TAG, String.format("POST onResponse: %s ", body));
+
+                        ApiResponse apiResponse = gson.fromJson(body, ApiResponse.class);
+
+                        Log.d(TAG, apiResponse.toString());
                     }
                 });
             }

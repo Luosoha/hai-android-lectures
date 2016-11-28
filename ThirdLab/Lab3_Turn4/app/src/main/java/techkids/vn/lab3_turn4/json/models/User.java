@@ -11,6 +11,9 @@ public class User {
     @SerializedName("Id")
     private int id;
 
+    @SerializedName("AccessToken")
+    private String accessToken;
+
     @SerializedName("Phone")
     private String phone;
 
@@ -23,7 +26,7 @@ public class User {
     @SerializedName("Password")
     private String password;
 
-    @SerializedName("DateOfBirth")
+    @SerializedName("DayOfBirth")
     private int dateOfBirth;
 
     @SerializedName("MonthOfBirth")
@@ -46,13 +49,14 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id + "\n" +
+                ", accessToken='" + accessToken + "\n" +
                 ", phone='" + phone + "\n" +
                 ", customerName='" + customerName + "\n" +
                 ", email='" + email + "\n" +
                 ", password='" + password + "\n" +
-                ", dateOfBirth='" + dateOfBirth + "\n" +
-                ", monthOfBirth='" + monthOfBirth + "\n" +
-                ", yearOfBirth='" + yearOfBirth + "\n" +
+                ", dateOfBirth=" + dateOfBirth + "\n" +
+                ", monthOfBirth=" + monthOfBirth + "\n" +
+                ", yearOfBirth=" + yearOfBirth + "\n" +
                 '}';
     }
 }
