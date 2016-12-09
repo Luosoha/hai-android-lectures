@@ -1,0 +1,59 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="techkids.vn.lab4_turn1.fragments.DetailFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_company_name"
+            android:text="@string/company_name"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_value_of_10" />
+
+        <TextView
+            android:id="@+id/tv_company_phone"
+            android:text="@string/company_phone"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_value_of_10"/>
+
+        <TextView
+            android:id="@+id/tv_company_website"
+            android:text="@string/company_website"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_value_of_10"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/iv_image_icon"
+            android:src="@drawable/image_icon"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
+
+    </LinearLayout>
+
+</FrameLayout>
