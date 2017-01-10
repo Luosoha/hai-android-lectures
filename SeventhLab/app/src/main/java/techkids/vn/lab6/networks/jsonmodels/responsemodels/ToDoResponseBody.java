@@ -20,10 +20,18 @@ public class ToDoResponseBody {
     @SerializedName("content")
     private String content;
 
-    public ToDoResponseBody(String title, String color, String content) {
+    @SerializedName("completed")
+    private boolean completed;
+
+    @SerializedName("_id")
+    private Id id;
+
+    public ToDoResponseBody(String title, String color, String content, boolean completed, Id id) {
         this.title = title;
         this.color = color;
         this.content = content;
+        this.completed = completed;
+        this.id = id;
     }
 
     public String getTitle() {
@@ -38,7 +46,32 @@ public class ToDoResponseBody {
         return content;
     }
 
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public String getId() {
+        return id.getId();
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public static List<ToDoResponseBody> toDoList = new ArrayList<>();
+    public static List<ToDoResponseBody> completedToDoList = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -47,5 +80,25 @@ public class ToDoResponseBody {
                 ", color='" + color + '\'' +
                 ", content='" + content + '\'' +
                 '}';
+    }
+
+    class Id{
+        @SerializedName("$oid")
+        private String id;
+
+        public Id(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return "Id{" +
+                    "id='" + id + '\'' +
+                    '}';
+        }
     }
 }

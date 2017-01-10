@@ -4,9 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import techkids.vn.lab6.activities.MainActivity;
 import techkids.vn.lab6.activities.NoteActivity;
-import techkids.vn.lab6.fragments.FinishedToDoFragment;
+import techkids.vn.lab6.fragments.CompletedToDoFragment;
 import techkids.vn.lab6.fragments.ToDoFragment;
 
 /**
@@ -24,7 +23,7 @@ public class ScreenSlideAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new ToDoFragment();
             case 1:
-                return new FinishedToDoFragment();
+                return new CompletedToDoFragment();
         }
         return null;
     }
@@ -32,5 +31,16 @@ public class ScreenSlideAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return NoteActivity.NUM_PAGES;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0:
+                return "To Do List";
+            case 1:
+                return "Completed List";
+        }
+        return null;
     }
 }

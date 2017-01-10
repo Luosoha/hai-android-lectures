@@ -1,11 +1,8 @@
 package techkids.vn.lab6.activities;
 
-import android.content.Intent;
-import android.os.Build;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -15,9 +12,9 @@ import butterknife.ButterKnife;
 import techkids.vn.lab6.R;
 import techkids.vn.lab6.adapters.ScreenSlideAdapter;
 import techkids.vn.lab6.events.CreateNewNoteEvent;
-import techkids.vn.lab6.events.SaveToDoEvent;
-import techkids.vn.lab6.fragments.CreateFragment;
-import techkids.vn.lab6.fragments.ToDoFragment;
+import techkids.vn.lab6.events.EditNoteEvent;
+import techkids.vn.lab6.fragments.ActionOnNoteFragment;
+import techkids.vn.lab6.networks.jsonmodels.responsemodels.ToDoResponseBody;
 
 public class NoteActivity extends BaseActivity {
 
@@ -26,6 +23,9 @@ public class NoteActivity extends BaseActivity {
 
     @BindView(R.id.vp_to_do)
     ViewPager vpToDo;
+
+    @BindView(R.id.tl_title)
+    TabLayout tlTitle;
 
     private ScreenSlideAdapter screenSlideAdapter;
 
@@ -39,13 +39,24 @@ public class NoteActivity extends BaseActivity {
     public void init() {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
+        tlTitle.setupWithViewPager(vpToDo);
         screenSlideAdapter = new ScreenSlideAdapter(getSupportFragmentManager());
         vpToDo.setAdapter(screenSlideAdapter);
     }
 
     @Subscribe
     public void onEvent(CreateNewNoteEvent createNewNoteEvent) {
-        changeFragment(R.id.fl_container, new CreateFragment(), false);
+        ActionOnNoteFragment actionOnNoteFragment = new ActionOnNoteFragment();
+        actionOnNoteFragment.setActionCode(ActionOnNoteFragment.CREATE_CODE);
+        changeFragment(R.id.fl_container, actionOnNoteFragment, false);
+    }
+
+    @Subscribe
+    public void onEvent(EditNoteEvent editNoteEvent) {
+        ActionOnNoteFragment actionOnNoteFragment = new ActionOnNoteFragment();
+        actionOnNoteFragment.setActionCode(ActionOnNoteFragment.EDIT_CODE);
+        actionOnNoteFragment.setToDoResponseBody(editNoteEvent.getToDoResponseBody());
+        changeFragment(R.id.fl_container, actionOnNoteFragment, false);
     }
 
     @Override

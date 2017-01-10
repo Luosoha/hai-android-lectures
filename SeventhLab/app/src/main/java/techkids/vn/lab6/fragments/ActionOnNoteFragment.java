@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Arrays;
 
@@ -23,17 +22,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import techkids.vn.lab6.R;
 import techkids.vn.lab6.adapters.ColorAdapter;
+import techkids.vn.lab6.events.EditNoteEvent;
 import techkids.vn.lab6.events.SaveToDoEvent;
 import techkids.vn.lab6.models.ColorChoosen;
 import techkids.vn.lab6.networks.DbContext;
-import techkids.vn.lab6.networks.jsonmodels.requestmodels.CreateNoteRequestBody;
+import techkids.vn.lab6.networks.jsonmodels.requestmodels.ActionOnNoteRequestBody;
+import techkids.vn.lab6.networks.jsonmodels.responsemodels.ToDoResponseBody;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateFragment extends Fragment {
+public class ActionOnNoteFragment extends Fragment {
 
-    private static final String TAG = CreateFragment.class.toString();
+    private static final String TAG = ActionOnNoteFragment.class.toString();
+    public static final int EDIT_CODE = 0;
+    public static final int CREATE_CODE = 1;
+
     @BindView(R.id.et_title)
     EditText etTitle;
 
@@ -49,10 +53,14 @@ public class CreateFragment extends Fragment {
     @BindView(R.id.cv_container)
     CardView cvContainer;
 
+    private int actionCode;
+    private ToDoResponseBody toDoResponseBody = null;
+    private int colorIndex = -1;
+
     private ColorAdapter colorAdapter;
     private String color;
 
-    public CreateFragment() {
+    public ActionOnNoteFragment() {
         // Required empty public constructor
     }
 
@@ -68,6 +76,12 @@ public class CreateFragment extends Fragment {
         setupUI();
         addListeners();
 
+        if (toDoResponseBody != null) {
+            etTitle.setText(toDoResponseBody.getTitle());
+            etContent.setText(toDoResponseBody.getContent());
+            cvContainer.setBackgroundColor(Color.parseColor(toDoResponseBody.getColor()));
+        }
+
         return view;
     }
 
@@ -75,8 +89,10 @@ public class CreateFragment extends Fragment {
         spColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                color = ColorChoosen.COLORS[position].getColorSrc();
-                cvContainer.setBackgroundColor(Color.parseColor(color));
+                if (toDoResponseBody == null || (toDoResponseBody != null & position != 0)) {
+                    color = ColorChoosen.COLORS[position].getColorSrc();
+                    cvContainer.setBackgroundColor(Color.parseColor(color));
+                }
             }
 
             @Override
@@ -88,14 +104,25 @@ public class CreateFragment extends Fragment {
         fbCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CreateNoteRequestBody createNoteRequestBody = new CreateNoteRequestBody(
+                ActionOnNoteRequestBody createNoteRequestBody = new ActionOnNoteRequestBody(
                         etTitle.getText().toString(),
                         etContent.getText().toString(),
                         color
                 );
                 Log.d(TAG, createNoteRequestBody.toString());
 
-                DbContext.createNote(createNoteRequestBody);
+                if (colorIndex != -1)
+                ActionOnNoteRequestBody editNoteRequestBody = new ActionOnNoteRequestBody(
+                        etTitle.getText().toString(),
+                        etContent.getText().toString(),
+                        ColorChoosen.COLORS[colorIndex].getColorSrc()
+                );
+
+                if (actionCode == CREATE_CODE) {
+                    DbContext.createNote(createNoteRequestBody);
+                } else if (actionCode == EDIT_CODE) {
+                    DbContext.editNote(createNoteRequestBody, toDoResponseBody.getId());
+                }
 
                 EventBus.getDefault().post(new SaveToDoEvent());
             }
@@ -107,6 +134,22 @@ public class CreateFragment extends Fragment {
                 getContext(), R.layout.item_color, Arrays.asList(ColorChoosen.COLORS)
         );
         spColor.setAdapter(colorAdapter);
+
+        if (toDoResponseBody != null) {
+            for (int i = 0; i < ColorChoosen.COLORS.length; i++) {
+                if (toDoResponseBody.getColor().equals(ColorChoosen.COLORS[i].getColorSrc())) {
+                    colorIndex = i;
+                }
+            }
+        }
+        spColor.setSelection(colorIndex);
     }
 
+    public void setActionCode(int actionCode) {
+        this.actionCode = actionCode;
+    }
+
+    public void setToDoResponseBody(ToDoResponseBody toDoResponseBody) {
+        this.toDoResponseBody = toDoResponseBody;
+    }
 }
