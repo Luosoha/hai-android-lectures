@@ -35,6 +35,16 @@ public class RealmContext {
         realm.commitTransaction();
     }
 
+    public List<Subgenres> findGenreIsFavor(){
+        return realm.where(Subgenres.class).equalTo("isFavorite", true).findAll();
+    }
+
+    public void update(Subgenres subgenres, boolean favorite) {
+        realm.beginTransaction();
+        subgenres.setFavorite(favorite);
+        realm.commitTransaction();
+    }
+
     private static RealmContext instance;
 
     public static RealmContext getInstance() {

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import techkids.vn.music.MainActivity;
 import techkids.vn.music.R;
 import techkids.vn.music.adapters.SlideAdapter;
 
@@ -37,7 +38,6 @@ public class ViewPagerFragment extends Fragment implements View.OnKeyListener {
     public ViewPagerFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

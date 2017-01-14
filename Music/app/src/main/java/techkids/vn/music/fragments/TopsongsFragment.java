@@ -1,16 +1,13 @@
 package techkids.vn.music.fragments;
 
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,9 +17,18 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import techkids.vn.music.MainActivity;
 import techkids.vn.music.R;
+import techkids.vn.music.adapters.TopSongAdapter;
+import techkids.vn.music.managers.RealmContext;
+import techkids.vn.music.managers.RetrofitContext;
+import techkids.vn.music.networks.json_models.Song;
 import techkids.vn.music.networks.json_models.Subgenres;
+import techkids.vn.music.networks.json_models.TopSongsResponseBody;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +36,7 @@ import techkids.vn.music.networks.json_models.Subgenres;
 public class TopsongsFragment extends Fragment {
 
     private static final String TAG = TopsongsFragment.class.toString();
+    private static final int COLUMN_NUMBERS = 1;
 
     @BindView(R.id.view_back)
     View viewBack;
@@ -40,12 +47,30 @@ public class TopsongsFragment extends Fragment {
     @BindView(R.id.tv_category_name)
     TextView tvCategoryName;
 
-    private Subgenres subgenres;
+    @BindView(R.id.rv_top_songs)
+    RecyclerView rvTopSongs;
+
+    @BindView(R.id.view_favorite)
+    View viewFavorite;
+
+    private TopSongAdapter topSongAdapter;
+
+    private Subgenres sub;
+    private int position = -1;
 
     public TopsongsFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        for (int i = 0; i < Subgenres.subgenres.size(); i++) {
+            if (sub.getId().equals(Subgenres.subgenres.get(i).getId())) {
+                position = i;
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,13 +78,34 @@ public class TopsongsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_topsongs, container, false);
 
-        this.setHasOptionsMenu(true);
+        getTopSongs();
         ((MainActivity)getActivity()).getSupportActionBar().hide();
         ButterKnife.bind(this, view);
         setupUI();
         addListeners();
 
         return view;
+    }
+
+    private void getTopSongs() {
+        Song.SONGS.clear();
+
+        RetrofitContext.getTopSongs(sub.getId()).enqueue(new Callback<TopSongsResponseBody>() {
+            @Override
+            public void onResponse(Call<TopSongsResponseBody> call, Response<TopSongsResponseBody> response) {
+                Log.d(TAG, "onResponse");
+                TopSongsResponseBody topSongsResponseBody = response.body();
+                for (Song song : topSongsResponseBody.getSongList().getList()) {
+                    Song.SONGS.add(song);
+                }
+                topSongAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<TopSongsResponseBody> call, Throwable t) {
+                Log.d(TAG, "onFailure");
+            }
+        });
     }
 
     private void addListeners() {
@@ -72,33 +118,41 @@ public class TopsongsFragment extends Fragment {
     }
 
     private void setupUI() {
-        if (subgenres != null) {
-            tvCategoryName.setText(subgenres.getTranslationKey());
-            String src = "genre_" + subgenres.getId();
+        setFavoriteView();
+
+        if (sub != null) {
+            tvCategoryName.setText(sub.getTranslationKey());
+            String src = "genre_" + sub.getId();
             int rid = this.ivCategory.getResources().getIdentifier(src,
                     "drawable", this.ivCategory.getContext().getPackageName());
             if (rid != 0) {
                 Picasso.with(this.getContext()).load(rid).into(ivCategory);
             }
         }
+
+        topSongAdapter = new TopSongAdapter();
+//        rvTopSongs.setHasFixedSize(true);
+        rvTopSongs.setLayoutManager(new GridLayoutManager(getActivity(), COLUMN_NUMBERS));
+        rvTopSongs.setAdapter(topSongAdapter);
     }
 
-    public void setSubgenres(Subgenres subgenres) {
-        this.subgenres = subgenres;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_top_songs, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                return true;
+    private void setFavoriteView() {
+        if (Subgenres.subgenres.get(position).isFavorite()) {
+            viewFavorite.setBackgroundResource(R.drawable.ic_favorite_filled_white_24px);
+        } else {
+            viewFavorite.setBackgroundResource(R.drawable.ic_favorite_border_white_24px);
         }
-        return false;
     }
+
+    @OnClick(R.id.view_favorite)
+    public void onClick() {
+        Log.d(TAG, "onClick");
+        RealmContext.getInstance().update(Subgenres.subgenres.get(position), !Subgenres.subgenres.get(position).isFavorite());
+        setFavoriteView();
+    }
+
+    public void setSub(Subgenres sub) {
+        this.sub = sub;
+    }
+
 }

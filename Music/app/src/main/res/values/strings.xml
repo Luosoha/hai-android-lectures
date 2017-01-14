@@ -8,4 +8,5 @@
     <string name="search">Search</string>
     <string name="favorite">Favorite</string>
     <string name="share">Share</string>
+    <string name="number_of_top_songs">50 songs</string>
 </resources>

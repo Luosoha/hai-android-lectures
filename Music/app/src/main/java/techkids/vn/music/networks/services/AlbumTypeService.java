@@ -4,7 +4,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import techkids.vn.music.networks.json_models.SongCategoryResponse;
+import techkids.vn.music.networks.json_models.SongCategoryResponseBody;
 
 /**
  * Created by Lush on 1/8/2017.
@@ -12,5 +12,5 @@ import techkids.vn.music.networks.json_models.SongCategoryResponse;
 
 public interface AlbumTypeService {
     @GET("/data/media-types.json")
-    Call<List<SongCategoryResponse>> getAlbumTypes();
+    Call<List<SongCategoryResponseBody>> getAlbumTypes();
 }

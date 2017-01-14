@@ -1,10 +1,5 @@
 package techkids.vn.music;
 
-import android.app.ActionBar;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,12 +17,13 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import techkids.vn.music.events.GenreDataReadyEvent;
 import techkids.vn.music.events.OpenTopsongsFragmentEvent;
 import techkids.vn.music.fragments.TopsongsFragment;
 import techkids.vn.music.fragments.ViewPagerFragment;
 import techkids.vn.music.managers.RealmContext;
 import techkids.vn.music.managers.RetrofitContext;
-import techkids.vn.music.networks.json_models.SongCategoryResponse;
+import techkids.vn.music.networks.json_models.SongCategoryResponseBody;
 import techkids.vn.music.networks.json_models.Subgenres;
 
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
@@ -49,16 +44,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         init();
         getSongCategories();
         changeFragment(new ViewPagerFragment(), false);
@@ -68,33 +53,45 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         RealmContext.init(this);
     }
 
+    private void getSongCategoriesFromRealm() {
+        for (Subgenres s : RealmContext.getInstance().allSubgenres()) {
+            Subgenres.subgenres.add(s);
+        }
+    }
+
     private void getSongCategories() {
-        RetrofitContext.getAlbumTypes().enqueue(new Callback<List<SongCategoryResponse>>() {
-            @Override
-            public void onResponse(Call<List<SongCategoryResponse>> call, Response<List<SongCategoryResponse>> response) {
-                Log.d(TAG, "onResponse");
-                List<SongCategoryResponse> types = response.body();
+        if (RealmContext.getInstance().allSubgenres().size() == 0) {
+            RetrofitContext.getAlbumTypes().enqueue(new Callback<List<SongCategoryResponseBody>>() {
+                @Override
+                public void onResponse(Call<List<SongCategoryResponseBody>> call, Response<List<SongCategoryResponseBody>> response) {
+                    Log.d(TAG, "onResponse");
+                    List<SongCategoryResponseBody> types = response.body();
 
-                SongCategoryResponse musicTypes = new SongCategoryResponse();
-                for (SongCategoryResponse type: types) {
-                    if (type.getId().equals("34")) {
-                        Log.d(TAG, type.toString());
-                        musicTypes = type;
+                    SongCategoryResponseBody musicTypes = new SongCategoryResponseBody();
+                    for (SongCategoryResponseBody type : types) {
+                        if (type.getId().equals("34")) {
+                            Log.d(TAG, type.toString());
+                            musicTypes = type;
+                        }
                     }
+
+                    RealmContext.getInstance().deleteAll();
+                    for (Subgenres s : musicTypes.getSubgenres()) {
+                        RealmContext.getInstance().insertSubgenre(s);
+                        Subgenres.subgenres.add(s);
+                    }
+
+                    EventBus.getDefault().post(new GenreDataReadyEvent());
                 }
 
-                RealmContext.getInstance().deleteAll();
-                for (Subgenres s: musicTypes.getSubgenres()) {
-                    RealmContext.getInstance().insertSubgenre(s);
-                    Subgenres.subgenres.add(s);
+                @Override
+                public void onFailure(Call<List<SongCategoryResponseBody>> call, Throwable t) {
+                    Log.d(TAG, "onFailure" + t.toString());
                 }
-            }
-
-            @Override
-            public void onFailure(Call<List<SongCategoryResponse>> call, Throwable t) {
-                Log.d(TAG, "onFailure" + t.toString());
-            }
-        });
+            });
+        } else {
+            getSongCategoriesFromRealm();
+        }
     }
 
     private void loadSongCategoriesFromDatabase() {
@@ -144,11 +141,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
             Log.d(TAG, "triggered");
             finish();
         } else {
-            getSupportActionBar().show(); // Optional
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-//            changeFragment(new ViewPagerFragment(), false);
+            getSupportActionBar().show();
             getSupportFragmentManager().popBackStack();
         }
     }
@@ -156,16 +149,8 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     @Subscribe
     public void onEvent(OpenTopsongsFragmentEvent openTopsongsFragmentEvent) {
         TopsongsFragment topsongsFragment = (TopsongsFragment) openTopsongsFragmentEvent.getFragment();
-        topsongsFragment.setSubgenres(openTopsongsFragmentEvent.getSubgenres());
+        topsongsFragment.setSub(openTopsongsFragmentEvent.getSubgenres());
         changeFragment(topsongsFragment, openTopsongsFragmentEvent.isAddToBackStack());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        int colorBlack = Color.parseColor("#59000000");
-        int colorWhite = Color.parseColor("#00000000");
-        int[] colors = {colorBlack, colorWhite};
-//        getSupportActionBar().setBackgroundDrawable(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors));
     }
 
     @Override

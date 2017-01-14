@@ -18,6 +18,8 @@ public class Subgenres extends RealmObject {
     @SerializedName("translation_key")
     private String translationKey;
 
+    private boolean isFavorite = false;
+
     public Subgenres() {
     }
 
@@ -34,12 +36,17 @@ public class Subgenres extends RealmObject {
         return translationKey;
     }
 
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
     @Override
     public String toString() {
-        return "Subgenres{" +
-                "id='" + id + '\'' +
-                ", translationKey='" + translationKey + '\'' +
-                '}';
+        return translationKey;
     }
 
     public static ArrayList<Subgenres> subgenres = new ArrayList<>();
