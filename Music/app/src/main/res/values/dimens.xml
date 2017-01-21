@@ -16,4 +16,5 @@
     <dimen name="margin_top_songs_list">16dp</dimen>
     <dimen name="top_song_size">80dp</dimen>
     <dimen name="padding_top_song_image">12dp</dimen>
+    <dimen name="margin_tool_bar_item">16dp</dimen>
 </resources>

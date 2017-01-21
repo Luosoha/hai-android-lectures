@@ -31,8 +31,12 @@ public class Song {
         return name.getSongName();
     }
 
-    public String getImageUrl() {
+    public String getIconUrl() {
         return images[0].getUrl();
+    }
+
+    public String getImageUrl() {
+        return images[2].getUrl();
     }
 
     public String getArtist() {

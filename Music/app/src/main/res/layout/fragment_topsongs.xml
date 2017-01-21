@@ -41,7 +41,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"/>
+                android:layout_weight="8"/>
 
             <View
                 android:id="@+id/view_search"
@@ -93,7 +93,7 @@
             />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_play"
+            android:id="@+id/fab_action"
             android:layout_alignTop="@id/view_temp"
             android:layout_alignEnd="@id/iv_category"
             android:layout_width="wrap_content"

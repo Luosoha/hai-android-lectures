@@ -3,6 +3,7 @@ package techkids.vn.music.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -145,10 +146,18 @@ public class TopsongsFragment extends Fragment {
     }
 
     @OnClick(R.id.view_favorite)
-    public void onClick() {
+    public void onViewFavoriteClick() {
         Log.d(TAG, "onClick");
         RealmContext.getInstance().update(Subgenres.subgenres.get(position), !Subgenres.subgenres.get(position).isFavorite());
         setFavoriteView();
+    }
+
+    @OnClick(R.id.fab_action)
+    public void onFabActionClick() {
+        Log.d(TAG, "fab onClick");
+        // Play the first song in the list
+        // ...
+
     }
 
     public void setSub(Subgenres sub) {
